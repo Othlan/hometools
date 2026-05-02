@@ -1,6 +1,8 @@
+version: "3.9"
+
 services:
   metube:
-    image: alexta69/metube
+    image: alexta69/metube:latest
     container_name: metube
     restart: unless-stopped
     ports:
@@ -8,10 +10,10 @@ services:
     volumes:
       - /hometools/metube:/downloads
     environment:
-      - DELETE_FILE_ON_TRASHCAN=true
-      - YTP_METADATA=false
-      - 'YTDL_OPTIONS={"writethumbnail": false, "writeinfojson": false, "addmetadata": false}'
-      - YTP_POSTPROCESSOR_ARGS=ffmpeg:-map_metadata -1 -fflags +bitexact -flags:v +bitexact -flags:a +bitexact
+      DELETE_FILE_ON_TRASHCAN: "true"
+      YTP_METADATA: "false"
+      YTDL_OPTIONS: '{"writethumbnail": false, "writeinfojson": false, "addmetadata": false}'
+      YTP_POSTPROCESSOR_ARGS: "ffmpeg:-map_metadata -1 -fflags +bitexact -flags:v +bitexact -flags:a +bitexact"
 
   stirling-pdf:
     image: froggle/stirling-pdf:latest
@@ -20,21 +22,21 @@ services:
     ports:
       - "8081:8080"
     environment:
-      - DOCKER_ENABLE_SECURITY=false
+      DOCKER_ENABLE_SECURITY: "false"
 
   samba:
-    image: dperson/samba
+    image: dperson/samba:latest
     container_name: samba
     restart: unless-stopped
     ports:
       - "139:139"
       - "445:445"
     environment:
-      - USER=${SAMBA_USER}
-      - PASS=${SAMBA_PASS}
+      USER: "${SAMBA_USER}"
+      PASS: "${SAMBA_PASS}"
     volumes:
       - /hometools/metube:/mnt/Media
-    command: >
+    command:
       -u "$$USER;$$PASS"
       -s "Downloads;/mnt/Media;yes;no;no;$$USER"
       -p
