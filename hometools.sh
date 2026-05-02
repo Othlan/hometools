@@ -9,13 +9,14 @@ sudo chown -R $USER:docker /opt/hometools/data
 sudo chmod -R 775 /opt/hometools/data
 
 echo "--- 2. Configuring Firewall (UFW) ---"
+if ! command -v ufw > /dev/null 2>&1; then
+    echo "Installing UFW..."
+    sudo apt update
+    sudo apt install -y ufw
+fi
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
 sudo ufw allow 22/tcp
-sudo ufw allow 445/tcp
-sudo ufw allow 139/tcp
-sudo ufw allow 137/udp
-sudo ufw allow 138/udp
 
 read -rp "Are you using Nginx Proxy? (y/n): " USE_NGINX
 if [[ "$USE_NGINX" =~ ^[Yy]$ ]]; then
@@ -34,26 +35,15 @@ fi
 
 echo "y" | sudo ufw enable
 
-echo "--- 3. Samba Credentials (In-Memory) ---"
-read -rp "Set Samba Username: " SAMBA_USER
-read -rsp "Set Samba Password: " SAMBA_PASS
-echo ""
-
-if [[ -z "$SAMBA_USER" || -z "$SAMBA_PASS" ]]; then
-    echo "Error: Samba credentials cannot be empty."
+echo "--- 3. Launching Services ---"
+if ! command -v docker > /dev/null 2>&1; then
+    echo "Error: Docker is not installed. Run prep_server.sh first."
     exit 1
 fi
-
-export SAMBA_USER=$SAMBA_USER
-export SAMBA_PASS=$SAMBA_PASS
-
-echo "--- 4. Checking Dependencies ---"
-if ! command -v smbclient > /dev/null 2>&1; then
-    echo "Installing samba-client for container healthchecks..."
-    sudo apt update && sudo apt install -y samba-client
+if ! docker compose version > /dev/null 2>&1; then
+    echo "Error: Docker Compose is not available. Run prep_server.sh first."
+    exit 1
 fi
-
-echo "--- 5. Launching Services ---"
 docker compose up -d
 
 echo "--------------------------------------------------------"
