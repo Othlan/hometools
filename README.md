@@ -1,6 +1,6 @@
 ## Quick Start (One-Click Install)
-1. Clone the repository: `git clone https://github.com/Othlan/HomeTools.git /ConfigServer` (or any directory)
-2. `cd /ConfigServer`
+1. Clone the repository: `git clone https://github.com/Othlan/hometools` (or any directory)
+2. `cd /hometools`
 3. Make scripts executable: `chmod +x *.sh`
 4. Run: `./prep_server.sh`
 5. Follow prompts for Nginx (optional) and Samba credentials.
