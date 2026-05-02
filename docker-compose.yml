@@ -1,6 +1,6 @@
 services:
   metube:
-    image: alexta69/metube:latest
+    image: alexta69/metube:2026.04.28
     container_name: metube
     restart: unless-stopped
     ports:
@@ -12,29 +12,43 @@ services:
       YTP_METADATA: "false"
       YTDL_OPTIONS: '{"writethumbnail": false, "writeinfojson": false, "addmetadata": false}'
       YTP_POSTPROCESSOR_ARGS: "ffmpeg:-map_metadata -1 -fflags +bitexact -flags:v +bitexact -flags:a +bitexact"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   stirling-pdf:
-    image: ghcr.io/stirling-tools/stirling-pdf:latest
+    image: ghcr.io/stirling-tools/stirling-pdf:v2.10.0
     container_name: stirling-pdf
     restart: unless-stopped
     ports:
       - "8081:8080"
     environment:
       DOCKER_ENABLE_SECURITY: "false"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/v1/info/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   samba:
-    image: dperson/samba:latest
+    image: crazymax/samba:4.24.1
     container_name: samba
     restart: unless-stopped
     ports:
       - "139:139"
       - "445:445"
+      - "137:137/udp"
+      - "138:138/udp"
     environment:
-      USER: "${SAMBA_USER}"
-      PASS: "${SAMBA_PASS}"
+      - "TZ=Europe/Bucharest"
+      - "SAMBA_USERS=${SAMBA_USER}:${SAMBA_PASS}"
+      - "SAMBA_SHARES=Downloads;/mnt/Media;yes;no;no;${SAMBA_USER}"
     volumes:
       - /opt/hometools/data/metube:/mnt/Media
-    command:
-      -u "$$USER;$$PASS"
-      -s "Downloads;/mnt/Media;yes;no;no;$$USER"
-      -p
+    healthcheck:
+      test: ["CMD", "smbclient", "-L", "localhost", "-U", "${SAMBA_USER}%${SAMBA_PASS}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

@@ -49,7 +49,14 @@ fi
 
 export SAMBA_USER SAMBA_PASS
 
-echo "4. Launching HomeTools YAML"
+echo "4. Ensuring Samba healthcheck dependency is installed"
+if ! command -v smbclient > /dev/null 2>&1; then
+    echo "Installing samba-client for Samba healthchecks..."
+    sudo apt update
+    sudo apt install -y samba-client
+fi
+
+echo "5. Launching HomeTools YAML"
 docker compose up -d
 
 echo "--------------------------------------------------------"

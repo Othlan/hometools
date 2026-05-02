@@ -5,7 +5,7 @@ set -e
 
 echo "--- 1. Updating System and Installing Prerequisites ---"
 sudo apt update && sudo apt upgrade -y
-sudo apt install -y ca-certificates curl
+sudo apt install -y ca-certificates curl samba-client
 
 echo "--- 2. Setting up Docker Official GPG Key ---"
 sudo install -m 0755 -d /etc/apt/keyrings
