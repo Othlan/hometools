@@ -1,6 +1,11 @@
-# HomeTools
+## Quick Start (One-Click Install)
+1. Clone the repository: `git clone https://github.com/Othlan/HomeTools.git /ConfigServer` (or any directory)
+2. `cd /ConfigServer`
+3. Make scripts executable: `chmod +x *.sh`
+4. Run: `./Prep_Server.sh`
+5. Follow prompts for Nginx (optional) and Samba credentials.
 
-A lightweight Docker-based home tools server for media and file-sharing utilities.
+Expected outcome: Docker services are running and operational.
 
 ## Included services
 - `metube`: media downloader / cataloger
@@ -13,32 +18,22 @@ A lightweight Docker-based home tools server for media and file-sharing utilitie
 - Samba: `\\HOST\Downloads`
 
 ## Requirements
-- Docker Engine and Compose plugin installed
-- Linux host with `sudo` access
-- Writable host directory: `/hometools/metube`
-
-## Setup
-1. Create the data directory:
-   ```bash
-   sudo mkdir -p /hometools/metube
-   sudo chown -R $USER:docker /hometools
-   sudo chmod -R 775 /hometools
-   ```
-2. Run the setup script and enter Samba credentials when prompted:
-   ```bash
-   ./HomeTools.sh
-   ```
+- Ubuntu Server (or Debian-based Linux)
+- User with `sudo` access (for system setup and Docker commands)
+- Writable host directory: `/hometools/metube` ```
 
 ## Scripts
-- `Prep_Server.sh`: installs Docker, the Compose plugin, adds the current user to the `docker` group, and then launches `HomeTools.sh`.
-- `HomeTools.sh`: creates the host data path, configures UFW rules (with option for Nginx proxy or open access), prompts once for Samba credentials, and starts the Docker stack.
+- `Prep_Server.sh`: One-click setup—installs Docker, Compose plugin, adds user to docker group, then runs `HomeTools.sh`.
+- `HomeTools.sh`: Configures data paths, firewall (with Nginx option), prompts for credentials, launches services, and shows status.
+- `UpdateAll.sh`: Updates all services by pulling latest images, prompts for Samba credentials, restarts services, and shows status.
 
 ## Notes
 - All credentials and configuration values are entered interactively and are not stored in any file.
 - The script asks if you want to use Nginx reverse proxy:
   - If yes: prompts for Nginx IP and restricts MeTube/Stirling PDF ports to that IP only.
   - If no: allows open access to MeTube (8080) and Stirling PDF (8081) from all IPs.
+  - Default: Deny incoming, allow outgoing, allow 22/445/139
 - Samba credentials are always prompted and not stored.
+- To update services later, run: `./UpdateAll.sh`
 - Do not create or save a `.env` file for Samba credentials unless you explicitly want to manage them manually.
 - If you run `docker compose` manually, you must set `SAMBA_USER` and `SAMBA_PASS` in the same shell session before starting the stack.
-

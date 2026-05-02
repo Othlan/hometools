@@ -52,6 +52,6 @@ docker compose up -d
 
 echo "--------------------------------------------------------"
 echo " HOMETOOLS DEPLOYMENT COMPLETE! "
-echo " MeTube: Port 8080 | Stirling PDF: Port 8081 "
-echo " Samba Share: \\<IP>\\Downloads "
+echo " Checking service status..."
+docker compose ps
 echo "--------------------------------------------------------"
