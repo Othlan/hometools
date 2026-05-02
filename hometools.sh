@@ -5,11 +5,11 @@ set -e
 
 echo "1. Creating Isolated Data Structure"
 # Create the deep path for metube downloads
-sudo mkdir -p /hometools/metube
+sudo mkdir -p /opt/hometools/data/metube
 
 # Set permissions so the 'docker' group (and our apps) can write there
-sudo chown -R $USER:docker /hometools
-sudo chmod -R 775 /hometools
+sudo chown -R $USER:docker /opt/hometools/data
+sudo chmod -R 775 /opt/hometools/data
 
 echo "2. Configuring Firewall"
 sudo ufw default deny incoming

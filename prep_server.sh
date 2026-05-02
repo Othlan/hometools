@@ -41,5 +41,5 @@ echo "--------------------------------------------------------"
 echo " SETUP FINISHED! "
 echo " IMPORTANT: I'll now start installing the software! "
 echo "--------------------------------------------------------"
-chmod +x hometools.sh
+sudo chmod +x hometools.sh
 sg docker -c "./hometools.sh"

@@ -1,8 +1,8 @@
 ## Quick Start (One-Click Install)
-1. Clone the repository: `git clone https://github.com/Othlan/hometools` (or any directory)
-2. `cd hometools`
-3. Make scripts executable: `chmod +x *.sh`
-4. Run: `./prep_server.sh`
+1. Clone the repository: `sudo git clone https://github.com/Othlan/hometools /opt/hometools`
+2. `cd /opt/hometools`
+3. Make scripts executable: `sudo chmod +x *.sh`
+4. Run: `sudo ./prep_server.sh`
 5. Follow prompts for Nginx (optional) and Samba credentials.
 
 Expected outcome: Docker services are running and operational.
@@ -20,7 +20,7 @@ Expected outcome: Docker services are running and operational.
 ## Requirements
 - Ubuntu Server (or Debian-based Linux)
 - User with `sudo` access (for system setup and Docker commands)
-- Writable host directory: `/data/metube`
+- Writable host directory: `/opt/hometools/data/metube`
 
 ## Scripts
 - `prep_server.sh`: One-click setup—installs Docker, Compose plugin, adds user to docker group, then runs `hometools.sh`.
