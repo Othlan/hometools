@@ -36,10 +36,8 @@ services:
   samba:
     image: crazymax/samba:latest
     container_name: samba
+    network_mode: host
     restart: unless-stopped
-    ports:
-      - "139:139"
-      - "445:445"
     volumes:
       - /opt/hometools/data/metube:/mnt/Media
     command: -u "${SAMBA_USER};${SAMBA_PASS}" -s "Downloads;/mnt/Media;yes;no;no;${SAMBA_USER}" -p

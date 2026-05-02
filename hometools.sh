@@ -14,6 +14,8 @@ sudo ufw default allow outgoing
 sudo ufw allow 22/tcp
 sudo ufw allow 445/tcp
 sudo ufw allow 139/tcp
+sudo ufw allow 137/udp
+sudo ufw allow 138/udp
 
 read -rp "Are you using Nginx Proxy? (y/n): " USE_NGINX
 if [[ "$USE_NGINX" =~ ^[Yy]$ ]]; then
