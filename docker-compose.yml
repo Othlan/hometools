@@ -6,7 +6,7 @@ services:
     ports:
       - "8080:8081"
     volumes:
-      - /hometools/metube:/downloads
+      - /data/metube:/downloads
     environment:
       DELETE_FILE_ON_TRASHCAN: "true"
       YTP_METADATA: "false"
@@ -33,7 +33,7 @@ services:
       USER: "${SAMBA_USER}"
       PASS: "${SAMBA_PASS}"
     volumes:
-      - /hometools/metube:/mnt/Media
+      - /data/metube:/mnt/Media
     command:
       -u "$$USER;$$PASS"
       -s "Downloads;/mnt/Media;yes;no;no;$$USER"
