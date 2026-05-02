@@ -40,3 +40,4 @@ echo " SETUP FINISHED! "
 echo " IMPORTANT: I'll now start installing the software! "
 echo "--------------------------------------------------------"
 sg docker -c "./Deploy_HomeTools.sh"
+test
