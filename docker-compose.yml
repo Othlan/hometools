@@ -40,18 +40,9 @@ services:
     ports:
       - "139:139"
       - "445:445"
-    environment:
-      - "TZ=Europe/Bucharest"
-      - "SAMBA_USER_0_NAME=${SAMBA_USER}"
-      - "SAMBA_USER_0_PASSWORD=${SAMBA_PASS}"
-      - "SAMBA_0_NAME=Downloads"
-      - "SAMBA_0_PATH=/mnt/Media"
-      - "SAMBA_0_BROWSEABLE=yes"
-      - "SAMBA_0_READ_ONLY=no"
-      - "SAMBA_0_GUEST_OK=no"  # IMPORTANT: Forțează Windows să ceară parolă
-      - "SAMBA_0_VALID_USERS=${SAMBA_USER}"
     volumes:
       - /opt/hometools/data/metube:/mnt/Media
+    command: -u "${SAMBA_USER};${SAMBA_PASS}" -s "Downloads;/mnt/Media;yes;no;no;${SAMBA_USER}" -p
     healthcheck:
       test: ["CMD", "smbclient", "-L", "localhost", "-U", "${SAMBA_USER}%${SAMBA_PASS}"]
       interval: 30s
