@@ -40,8 +40,6 @@ services:
     ports:
       - "139:139"
       - "445:445"
-      - "137:137/udp"
-      - "138:138/udp"
     environment:
       - "TZ=Europe/Bucharest"
       - "SAMBA_USER_0_NAME=${SAMBA_USER}"
@@ -50,6 +48,7 @@ services:
       - "SAMBA_0_PATH=/mnt/Media"
       - "SAMBA_0_BROWSEABLE=yes"
       - "SAMBA_0_READ_ONLY=no"
+      - "SAMBA_0_GUEST_OK=no"  # IMPORTANT: Forțează Windows să ceară parolă
       - "SAMBA_0_VALID_USERS=${SAMBA_USER}"
     volumes:
       - /opt/hometools/data/metube:/mnt/Media
