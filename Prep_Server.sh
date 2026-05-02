@@ -37,6 +37,6 @@ docker compose version
 
 echo "--------------------------------------------------------"
 echo " SETUP FINISHED! "
-echo " IMPORTANT: Run 'newgrp docker' or REBOOT the VM "
-echo " to apply group changes and run docker without sudo. "
+echo " IMPORTANT: I'll now start installing the software! "
 echo "--------------------------------------------------------"
+sg docker -c "./Deploy_HomeTools.sh"
