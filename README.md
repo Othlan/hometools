@@ -20,7 +20,6 @@
 - Ubuntu Server or Debian-based Linux
 - `sudo` access
 - Writable host directory: `/opt/hometools/data/metube`
-- `smbclient` installed for Samba healthchecks (installed automatically by setup)
 
 ## What the scripts do
 - `prep_server.sh`: installs Docker, Docker Compose plugin, and required packages, then runs `hometools.sh`.
@@ -31,5 +30,5 @@
 - Samba credentials are prompted interactively and not stored on disk.
 - `docker compose` is launched with `SAMBA_USER` and `SAMBA_PASS` set in the same shell session.
 - For better security in production, use a reverse proxy with SSL/TLS and avoid exposing 8080/8081 directly.
-- If you choose Nginx reverse proxy, the installer restricts MeTube and Stirling PDF access to the proxy IP only.
+- If you choose Nginx reverse proxy, the installer restricts MeTube and Stirling PDF access to the proxy IP only. Please use static IP.
 - Use `./updateall.sh` to pull updates and restart containers.

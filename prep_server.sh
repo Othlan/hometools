@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Exit immediately if a command exits with a non-zero status
 set -e
 
 echo "--- 1. Updating System and Installing Prerequisites ---"
@@ -24,7 +23,6 @@ EOF
 
 echo "--- 4. Installing Docker Engine and Compose Plugin ---"
 sudo apt update
-# docker-compose-v2 is the current recommended package for 'docker compose' command
 sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 echo "--- 5. Post-Installation: Adding User to Docker Group ---"
@@ -39,7 +37,8 @@ docker compose version
 
 echo "--------------------------------------------------------"
 echo " SETUP FINISHED! "
-echo " IMPORTANT: I'll now start installing the software! "
+echo " Proceeding to software installation... "
 echo "--------------------------------------------------------"
-sudo chmod +x hometools.sh
+
+chmod +x hometools.sh
 sg docker -c "./hometools.sh"

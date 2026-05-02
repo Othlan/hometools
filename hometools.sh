@@ -1,66 +1,61 @@
 #!/bin/bash
 
-# Exit immediately if a command exits with a non-zero status
 set -e
 
-echo "1. Creating Isolated Data Structure"
-# Create the deep path for metube downloads
+echo "--- 1. Creating Directory Structure ---"
 sudo mkdir -p /opt/hometools/data/metube
 
-# Set permissions so the 'docker' group (and our apps) can write there
 sudo chown -R $USER:docker /opt/hometools/data
 sudo chmod -R 775 /opt/hometools/data
 
-echo "2. Configuring Firewall"
+echo "--- 2. Configuring Firewall (UFW) ---"
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
-sudo ufw allow 22/tcp          # SSH access
-sudo ufw allow 445/tcp         # Samba
-sudo ufw allow 139/tcp         # Samba NetBIOS
+sudo ufw allow 22/tcp
+sudo ufw allow 445/tcp
+sudo ufw allow 139/tcp
 
-# Configure access for MeTube and Stirling PDF
-read -rp "Do you want to use Nginx reverse proxy? (y/n): " USE_NGINX
+read -rp "Are you using Nginx Proxy? (y/n): " USE_NGINX
 if [[ "$USE_NGINX" =~ ^[Yy]$ ]]; then
     read -rp "Enter Nginx Proxy IP (e.g., 192.168.1.100): " NGINX_IP
-    if [ -z "$NGINX_IP" ]; then
-        echo "Error: Nginx IP is required when using reverse proxy."
+    if [[ -z "$NGINX_IP" ]]; then
+        echo "Error: Nginx IP is required for restricted access. Exiting."
         exit 1
     fi
-    sudo ufw allow from $NGINX_IP to any port 8080 # MeTube
-    sudo ufw allow from $NGINX_IP to any port 8081 # Stirling PDF
+    sudo ufw allow from "$NGINX_IP" to any port 8080 comment 'MeTube via Proxy'
+    sudo ufw allow from "$NGINX_IP" to any port 8081 comment 'Stirling PDF via Proxy'
 else
-    echo "Allowing open access to MeTube (8080) and Stirling PDF (8081) from all IPs."
-    sudo ufw allow 8080/tcp # MeTube
-    sudo ufw allow 8081/tcp # Stirling PDF
+    echo "Warning: Allowing public access to ports 8080 and 8081."
+    sudo ufw allow 8080/tcp comment 'MeTube Open'
+    sudo ufw allow 8081/tcp comment 'Stirling PDF Open'
 fi
 
 echo "y" | sudo ufw enable
 
-echo "3. Security: Samba Credentials (In-Memory Only)"
-# These variables exist only during this script run and are not written to disk
-read -rp "Enter Samba Username: " SAMBA_USER
-read -rsp "Enter Samba Password: " SAMBA_PASS
+echo "--- 3. Samba Credentials (In-Memory) ---"
+read -rp "Set Samba Username: " SAMBA_USER
+read -rsp "Set Samba Password: " SAMBA_PASS
 echo ""
 
-if [ -z "$SAMBA_USER" ] || [ -z "$SAMBA_PASS" ]; then
-    echo "Error: Samba username and password are required."
+if [[ -z "$SAMBA_USER" || -z "$SAMBA_PASS" ]]; then
+    echo "Error: Samba credentials cannot be empty."
     exit 1
 fi
 
-export SAMBA_USER SAMBA_PASS
+export SAMBA_USER=$SAMBA_USER
+export SAMBA_PASS=$SAMBA_PASS
 
-echo "4. Ensuring Samba healthcheck dependency is installed"
+echo "--- 4. Checking Dependencies ---"
 if ! command -v smbclient > /dev/null 2>&1; then
-    echo "Installing samba-client for Samba healthchecks..."
-    sudo apt update
-    sudo apt install -y samba-client
+    echo "Installing samba-client for container healthchecks..."
+    sudo apt update && sudo apt install -y samba-client
 fi
 
-echo "5. Launching HomeTools YAML"
+echo "--- 5. Launching Services ---"
 docker compose up -d
 
 echo "--------------------------------------------------------"
 echo " HOMETOOLS DEPLOYMENT COMPLETE! "
-echo " Checking service status..."
+echo " Status of services: "
 docker compose ps
 echo "--------------------------------------------------------"
