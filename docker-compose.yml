@@ -1,6 +1,6 @@
 services:
   metube:
-    image: alexta69/metube:2024.04.28
+    image: alexta69/metube:2026.04.28
     container_name: metube
     restart: unless-stopped
     ports:
