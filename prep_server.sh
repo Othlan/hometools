@@ -4,7 +4,7 @@ set -eu
 echo "--- 1. Updating System and Installing Prerequisites ---"
 export DEBIAN_FRONTEND=noninteractive
 sudo apt update && sudo apt upgrade -y
-sudo apt install -y ca-certificates curl ufw gnupg lsb-release
+sudo apt install -y ca-certificates curl ufw
 
 echo "--- 2. Pre-configuring iptables-persistent ---"
 echo iptables-persistent iptables-persistent/autosave_v4 boolean true | sudo debconf-set-selections
@@ -12,16 +12,19 @@ echo iptables-persistent iptables-persistent/autosave_v6 boolean true | sudo deb
 sudo apt install -y iptables-persistent
 
 echo "--- 3. Setting up Docker GPG Key ---"
-sudo rm -f /etc/apt/keyrings/docker.asc
 sudo install -m 0755 -d /etc/apt/keyrings
-sudo curl -fsSL https://docker.com -o /etc/apt/keyrings/docker.asc
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
 
 echo "--- 4. Adding Docker Repository ---"
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://docker.com \
-  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo tee /etc/apt/sources.list.d/docker.sources <<EOF
+Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+Components: stable
+Architectures: $(dpkg --print-architecture)
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
 
 echo "--- 5. Installing Docker Engine ---"
 sudo apt update
