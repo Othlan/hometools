@@ -8,11 +8,11 @@ services:
     volumes:
       - /opt/hometools/data/metube:/downloads
     environment:
-      - TZ: ${TZ}
-      - DELETE_FILE_ON_TRASHCAN: "true"
-      - YTP_METADATA: "false"
-      - YTDL_OPTIONS: '{"writethumbnail": false, "writeinfojson": false, "addmetadata": false}'
-      - YTP_POSTPROCESSOR_ARGS: "ffmpeg:-map_metadata -1 -fflags +bitexact -flags:v +bitexact -flags:a +bitexact"
+      TZ: ${TZ}
+      DELETE_FILE_ON_TRASHCAN: "true"
+      YTP_METADATA: "false"
+      YTDL_OPTIONS: '{"writethumbnail": false, "writeinfojson": false, "addmetadata": false}'
+      YTP_POSTPROCESSOR_ARGS: "ffmpeg:-map_metadata -1 -fflags +bitexact -flags:v +bitexact -flags:a +bitexact"
 
   stirling-pdf:
     image: ghcr.io/stirling-tools/stirling-pdf:latest
@@ -23,8 +23,8 @@ services:
     volumes:
       - /opt/hometools/data/stirlingpdf:/configs
     environment:
-      - TZ=${TZ}
-      - DOCKER_ENABLE_SECURITY=false
+      TZ: ${TZ}
+      DOCKER_ENABLE_SECURITY: "false"
 
   bookstack:
     image: lscr.io/linuxserver/bookstack:latest
@@ -35,11 +35,11 @@ services:
     volumes:
       - /opt/hometools/data/bookstack:/config
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-      - APP_URL=${BOOKSTACK_URL}
-      - DB_TYPE=sqlite3
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+      APP_URL: ${BOOKSTACK_URL}
+      DB_TYPE: sqlite3
 
   homarr:
     image: ghcr.io/ajnart/homarr:latest
