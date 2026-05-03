@@ -8,7 +8,7 @@ services:
     volumes:
       - /opt/hometools/data/metube:/downloads
     environment:
-      - TZ=${TZ}
+      - TZ: ${TZ}
       - DELETE_FILE_ON_TRASHCAN: "true"
       - YTP_METADATA: "false"
       - YTDL_OPTIONS: '{"writethumbnail": false, "writeinfojson": false, "addmetadata": false}'
