@@ -1,19 +1,64 @@
 services:
   metube:
     image: alexta69/metube:latest
+    container_name: hometools-metube
     restart: unless-stopped
     ports:
       - "8080:8081"
     volumes:
       - /opt/hometools/data/metube:/downloads
     environment:
-      DELETE_FILE_ON_TRASHCAN: "true"
-      YTP_METADATA: "false"
-      YTDL_OPTIONS: '{"writethumbnail": false, "writeinfojson": false, "addmetadata": false}'
-      YTP_POSTPROCESSOR_ARGS: "ffmpeg:-map_metadata -1 -fflags +bitexact -flags:v +bitexact -flags:a +bitexact"
+      - TZ=${TZ}
+      - DELETE_FILE_ON_TRASHCAN: "true"
+      - YTP_METADATA: "false"
+      - YTDL_OPTIONS: '{"writethumbnail": false, "writeinfojson": false, "addmetadata": false}'
+      - YTP_POSTPROCESSOR_ARGS: "ffmpeg:-map_metadata -1 -fflags +bitexact -flags:v +bitexact -flags:a +bitexact"
 
   stirling-pdf:
     image: ghcr.io/stirling-tools/stirling-pdf:latest
+    container_name: hometools-stirling
     restart: unless-stopped
     ports:
       - "8081:8080"
+    volumes:
+      - /opt/hometools/data/stirlingpdf:/configs
+    environment:
+      - TZ=${TZ}
+      - DOCKER_ENABLE_SECURITY=false
+
+  bookstack:
+    image: lscr.io/linuxserver/bookstack:latest
+    container_name: hometools-bookstack
+    restart: unless-stopped
+    ports:
+      - "6875:80"
+    volumes:
+      - /opt/hometools/data/bookstack:/config
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - APP_URL=${BOOKSTACK_URL}
+      - DB_TYPE=sqlite3
+
+  homarr:
+    image: ghcr.io/ajnart/homarr:latest
+    container_name: hometools-homarr
+    restart: unless-stopped
+    ports:
+      - "7575:7575"
+    volumes:
+      - /opt/hometools/data/homarr:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    env_file: .env
+
+  portainer-agent:
+    image: portainer/agent:latest
+    container_name: hometools-agent
+    restart: unless-stopped
+    ports:
+      - "9001:9001"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/volumes:/var/lib/docker/volumes
+      - /opt/hometools/data/portainer_agent:/data
