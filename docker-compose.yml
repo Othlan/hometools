@@ -40,7 +40,7 @@ services:
       TZ: ${TZ}
       APP_URL: ${BOOKSTACK_URL}
       APP_KEY: ${SECRET_ENCRYPTION_KEY}
-      DB_TYPE: sqlite3
+      DB_TYPE: sqlite
 
   homarr:
     image: ghcr.io/ajnart/homarr:latest
