@@ -11,12 +11,16 @@ echo iptables-persistent iptables-persistent/autosave_v4 boolean true | sudo deb
 echo iptables-persistent iptables-persistent/autosave_v6 boolean true | sudo debconf-set-selections
 sudo apt install -y iptables-persistent
 
-echo "--- 3. Setting up Docker GPG Key ---"
+echo "--------------------------------------------------------"
+echo "--- 2. Setting up Docker Official GPG Key ---"
+echo "--------------------------------------------------------"
 sudo install -m 0755 -d /etc/apt/keyrings
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
 
-echo "--- 4. Adding Docker Repository ---"
+echo "--------------------------------------------------------"
+echo "------ 3. Adding Docker Repository to Apt Sources ------"
+echo "--------------------------------------------------------"
 sudo tee /etc/apt/sources.list.d/docker.sources <<EOF
 Types: deb
 URIs: https://download.docker.com/linux/ubuntu
@@ -26,7 +30,9 @@ Architectures: $(dpkg --print-architecture)
 Signed-By: /etc/apt/keyrings/docker.asc
 EOF
 
-echo "--- 5. Installing Docker Engine ---"
+echo "--------------------------------------------------------"
+echo "---- 4. Installing Docker Engine and Compose Plugin ----"
+echo "--------------------------------------------------------"
 sudo apt update
 sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
