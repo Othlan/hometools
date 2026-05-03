@@ -39,6 +39,7 @@ services:
       PGID: ${PGID}
       TZ: ${TZ}
       APP_URL: ${BOOKSTACK_URL}
+      APP_KEY: ${SECRET_ENCRYPTION_KEY}
       DB_TYPE: sqlite3
 
   homarr:
