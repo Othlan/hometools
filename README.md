@@ -4,7 +4,7 @@
 2. `cd /opt/hometools`
 3. `sudo chmod +x *.sh`
 4. `sudo ./prep_server.sh`
-5. Follow prompts for Nginx configuration.
+5. Follow prompts for Nginx configuration. (Optional!)
 
 ## Services
 - `metube`: media downloader / cataloger
